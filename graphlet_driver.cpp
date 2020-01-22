@@ -59,11 +59,11 @@ int main(int argc, char *argv[]) {
 	graphlet_core G(p);
 
 	G.compute_assortativity();
-	cout << "r = " << G.get_assortativity() << endl; // Assortativity
+	//cout << "r = " << G.get_assortativity() << endl; // Assortativity
 
 	/** @brief Compute k-core decomposition (k-core numbers, and degen. ordering) */
 	G.compute_cores();
-	cout << "K = " << G.get_max_core() <<endl; // Max K-core
+	//cout << "K = " << G.get_max_core() <<endl; // Max K-core
 
 	/// Creates E_ordered where edges are ordered via a strategy (kcore, degree, etc.)
 	double s = tic();
@@ -73,16 +73,16 @@ int main(int argc, char *argv[]) {
 	if (p.is_micro_stats()) { G.graphlet_decomposition_micro(p.workers); }
 	else { G.graphlet_decomposition(p.workers); }
 	toc(s);
-	G.print_graphlet_counts();
-	if (p.is_micro_stats()) G.print_micro_stats();
-	cout << "graphlet decomposition time: " << s << " sec" <<endl;
+	//G.print_graphlet_counts();
+	//if (p.is_micro_stats()) G.print_micro_stats();
+	//cout << "graphlet decomposition time: " << s << " sec" <<endl;
 
 	/// Save total counts of each motif (global macro stats) to the file specified by the user.
 	if (p.is_macro_stats()) G.write_macro_stats(p.macro_stats_filename);
 	if (p.is_micro_stats()) G.write_micro_stats(p.micro_stats_filename);
-	G.print_GFD();
-	G.print_connected_GFD();
-	G.print_disconnected_GFD();
+	//G.print_GFD();
+	//G.print_connected_GFD();
+	//G.print_disconnected_GFD();
 	if (p.is_micro_stats()) {
 		univar_stats s;
 		s.compute_univariate_stats(G.local_4_clique);

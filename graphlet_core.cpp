@@ -289,7 +289,7 @@ void graphlet_core::read_graph(const string& filename) {
  * LABELS:  Vertices are relabeled, and the old ids are discarded, unless specified.
  */
 void graphlet_core::read_edge_list(const string& filename) {
-	cout << "[reading generic edge list: read_edge_list func]  filename: " << filename <<endl;
+	//cout << "[reading generic edge list: read_edge_list func]  filename: " << filename <<endl;
     map< int, vector<int> > vert_list;
     int v = -1, u = -1, num_es = 0, self_edges = 0;
     double weight;
@@ -297,7 +297,7 @@ void graphlet_core::read_edge_list(const string& filename) {
     string graph_exif = "";
 
     ifstream file (filename.c_str());
-    if (!file) { if (verbose) cout << filename << "File not found!" <<endl; return; }
+    //if (!file) { if (verbose) cout << filename << "File not found!" <<endl; return; }
 
     // check if vertex ids start at 0 or 1
     is_weighted = false;
@@ -305,6 +305,7 @@ void graphlet_core::read_edge_list(const string& filename) {
     stringstream iss;
 
     // save graph info/comments at top of file
+    /*
     while(std::getline(file, line) && (line[0] == '#' || line[0] == '%')) {
         graph_exif += line;
         if (line.find("MatrixMarket matrix coordinate pattern symmetric") != std::string::npos) {
@@ -321,6 +322,7 @@ void graphlet_core::read_edge_list(const string& filename) {
         iss >> num_verts >> cols >> num_edges;
         if(num_verts!=cols) { cout<<"[pgd]  error: this is not a square matrix, attempting to proceed."<<endl; }
     }
+    */
 
     // detect the delim for reading the graph
     detect_delim(line,delim);
@@ -338,10 +340,24 @@ void graphlet_core::read_edge_list(const string& filename) {
         if (v == 0 || u == 0) { fix_start_idx = false; }
     }
 
+    // START HERE
+    vector<string> lines;
+    while(std::getline(std::cin, line)) {
+        lines.push_back(line);
+        /*
+        if (line != "X")
+            lines.push_back(line);
+        else
+            break;
+        */
+    }
+
     int max = 0; // largest vertex id (assumed to be ints)
     if (verbose) cout << "[pgd: graph reader]  reading a general edge list (limited assumptions)" <<endl;
     // find starting vertex id, compute the number of vertices to expect (since gaps in vertex ids are possible)
-    while(std::getline(file, line)) {
+    //while(std::getline(file, line)) {
+    for(int i = 0; i < lines.size(); i++) {
+        line = lines[i];
         if (line != "") { // ensure line actually contains data
             iss << line;
 
@@ -373,6 +389,7 @@ void graphlet_core::read_edge_list(const string& filename) {
     if (is_weighted) {
         while(std::getline(fin, line)) {
             if (line != "") { // ensure line actually contains data
+                cout << line << endl;
                 iss << line;
 
                 // ignore comments
@@ -408,8 +425,10 @@ void graphlet_core::read_edge_list(const string& filename) {
         }
     }
     else { // unweighted graph (two columns)
-        while(std::getline(fin, line)) {
+        //while(std::getline(fin, line)) {
+        for(int i = 0; i < lines.size(); i++) {
             if (line != "") { // ensure line actually contains data
+                line = lines[i];
                 iss << line;
                 if (line[0] == '%' || line[0] == '#') continue;
 
@@ -560,11 +579,11 @@ void graphlet_core::remove_multiple_edges() {
  * Examples: basic_stats("", "\n"), or basic_stats("", ", ");
  */
 void graphlet_core::basic_stats(string prefix, string suffix) {
-    cout << prefix << "|V|: " << num_vertices() <<suffix;
-    cout << prefix << "|E|: " << num_edges() <<suffix;
-    cout << prefix << "p: " << density() <<suffix;
-    cout << prefix << "d_max: " << get_max_degree() <<suffix;
-    cout << prefix << "d_avg: " << get_avg_degree() <<suffix;
+    //cout << prefix << "|V|: " << num_vertices() <<suffix;
+    //cout << prefix << "|E|: " << num_edges() <<suffix;
+    //cout << prefix << "p: " << density() <<suffix;
+    //cout << prefix << "d_max: " << get_max_degree() <<suffix;
+    //cout << prefix << "d_avg: " << get_avg_degree() <<suffix;
 }
 
 string graphlet_core::basic_names_line(string delim, string prefix, string suffix) {
@@ -1831,7 +1850,8 @@ void graphlet_core::print_micro_stats(bool output_id, string delim) {
      ofstream myfile;
      char *fn = (char*)filename.c_str();
      myfile.open(fn);
-     myfile << get_graphlet_counts();
+     //myfile << get_graphlet_counts();
+     cout << get_graphlet_counts();
      myfile.close();
  }
 
